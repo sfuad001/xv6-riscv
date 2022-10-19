@@ -23,7 +23,7 @@ void print_sysinfo(void)
 int main(int argc, char *argv[])
 {
     int mem, n_proc, ret, proc_pid[MAX_PROC];
-    int procRet;
+    //int procRet;
     //int n_proc, proc_pid[MAX_PROC];
     if (argc < 3)
     {
@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
             struct pinfo param;
             malloc(mem); // this triggers a syscall
             for (int j = 0; j < 10; j++) {
-                procRet = procinfo(&param); // calls 10 times
-                printf("procRet: %d\n", procRet);
+                procinfo(&param); // calls 10 times
+                //printf("procRet: %d\n", procRet);
             }
                 
             printf("[procinfo %d] ppid: %d, syscalls: %d, page usage: %d\n",

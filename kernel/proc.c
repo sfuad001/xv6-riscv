@@ -691,7 +691,15 @@ int
 sysinfo(int param)
 {
   if (param == 0) {
-    return 0;
+    int cnt = 0;
+    struct proc *p;
+    for (p = proc; p < &proc[NPROC]; p++){
+      acquire(&p->lock);
+      if (p->state != UNUSED)
+        cnt++;
+      release(&p->lock);
+    }
+    return cnt;
   } else if (param == 1) {
     return 1;
   } else if (param == 2) {
