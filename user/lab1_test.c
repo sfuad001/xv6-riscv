@@ -22,14 +22,15 @@ void print_sysinfo(void)
 
 int main(int argc, char *argv[])
 {
-    //int mem, n_proc, ret, proc_pid[MAX_PROC];
-    int n_proc, proc_pid[MAX_PROC];
+    int mem, n_proc, ret, proc_pid[MAX_PROC];
+    int procRet;
+    //int n_proc, proc_pid[MAX_PROC];
     if (argc < 3)
     {
         printf("Usage: %s [MEM] [N_PROC]\n", argv[0]);
         exit(-1);
     }
-    //mem = atoi(argv[1]);
+    mem = atoi(argv[1]);
     n_proc = atoi(argv[2]);
     if (n_proc > MAX_PROC)
     {
@@ -37,27 +38,30 @@ int main(int argc, char *argv[])
         exit(-1);
     }
     print_sysinfo();
-    // for (int i = 0; i < n_proc; i++)
-    // {
-    //     sleep(1);
-    //     ret = fork();
-    //     if (ret == 0)
-    //     { // child process
-    //         struct pinfo param;
-    //         malloc(mem); // this triggers a syscall
-    //         for (int j = 0; j < 10; j++)
-    //             procinfo(&param); // calls 10 times
-    //         printf("[procinfo %d] ppid: %d, syscalls: %d, page usage: %d\n",
-    //                getpid(), param.ppid, param.syscall_count, param.page_usage);
-    //         while (1)
-    //             ;
-    //     }
-    //     else
-    //     { // parent
-    //         proc_pid[i] = ret;
-    //         continue;
-    //     }
-    // }
+    for (int i = 0; i < n_proc; i++)
+    {
+        sleep(1);
+        ret = fork();
+        if (ret == 0)
+        { // child process
+            struct pinfo param;
+            malloc(mem); // this triggers a syscall
+            for (int j = 0; j < 10; j++) {
+                procRet = procinfo(&param); // calls 10 times
+                printf("procRet: %d\n", procRet);
+            }
+                
+            printf("[procinfo %d] ppid: %d, syscalls: %d, page usage: %d\n",
+                   getpid(), param.ppid, param.syscall_count, param.page_usage);
+            while (1)
+                ;
+        }
+        else
+        { // parent
+            proc_pid[i] = ret;
+            continue;
+        }
+    }
     sleep(1);
     print_sysinfo();
     for (int i = 0; i < n_proc; i++)

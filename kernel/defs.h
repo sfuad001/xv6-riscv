@@ -8,6 +8,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+struct pinfo; //procinfo
 
 // bio.c
 void            binit(void);
@@ -107,6 +108,7 @@ int             either_copyout(int user_dst, uint64 dst, void *src, uint64 len);
 int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
 void            procdump(void);
 int             sysinfo(int); // sysinfo
+int             procinfo(struct pinfo*); // procinfo
 
 // swtch.S
 void            swtch(struct context*, struct context*);
@@ -141,7 +143,6 @@ void            argaddr(int, uint64 *);
 int             fetchstr(uint64, char*, int);
 int             fetchaddr(uint64, uint64*);
 void            syscall();
-void            argpinfo(int, pinfo *); // procinfo:: support function to read pinfo structure
 
 // trap.c
 extern uint     ticks;

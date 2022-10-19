@@ -703,7 +703,7 @@ sysinfo(int param)
 // provides information specific to the current process
 // (= caller process of this syscall). 
 // It takes as input a pointer of struct pinfo and fills out the fields of this struct
-int procinfo(pinfo *in) 
+int procinfo(struct pinfo *in) 
 {
   return 100;
 }

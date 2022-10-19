@@ -106,8 +106,8 @@ sys_sysinfo(void)
 uint64
 sys_procinfo(void)
 {
-  pinfo *in;
-  argpinfo(0, (void*)&in);
+  struct pinfo *in;
+  argaddr(0, (void*)&in);
   return procinfo(in);
 }
 

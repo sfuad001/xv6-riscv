@@ -79,15 +79,6 @@ argstr(int n, char *buf, int max)
   return fetchstr(addr, buf, max);
 }
 
-// Retrieve an argument as a pointer.
-// Doesn't check for legality, since
-// copyin/copyout will do that.
-void
-argpinfo(int n, pinfo *ip)
-{
-  *ip = argraw(n);
-}
-
 // Prototypes for the functions that handle system calls.
 extern uint64 sys_fork(void);
 extern uint64 sys_exit(void);
