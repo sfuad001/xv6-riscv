@@ -4,6 +4,7 @@
 #include "riscv.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "run.h"
 #include "defs.h"
 
 struct cpu cpus[NCPU];
@@ -704,9 +705,16 @@ sysinfo(int param)
     return cnt;
   } else if (param == 1) {
     struct proc *p = myproc();
-    return p->syscallcnt;
+    return p->syscallcnt - 1; // return the total syscall except the current call
   } else if (param == 2) {
-    return 2;
+    int cnt = 0;
+    struct run *r;
+    r = getkmem();
+    while (r) {
+      r = r->next;
+      cnt++;
+    }
+    return cnt;
   } 
   return -1;
 }

@@ -9,6 +9,7 @@ struct sleeplock;
 struct stat;
 struct superblock;
 struct pinfo; //procinfo
+struct run; // sysinfo: param == 3
 
 // bio.c
 void            binit(void);
@@ -64,6 +65,7 @@ void            ramdiskrw(struct buf*);
 void*           kalloc(void);
 void            kfree(void *);
 void            kinit(void);
+struct run*     getkmem();
 
 // log.c
 void            initlog(int, struct superblock*);

@@ -7,16 +7,13 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "riscv.h"
+#include "run.h"
 #include "defs.h"
 
 void freerange(void *pa_start, void *pa_end);
 
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
-
-struct run {
-  struct run *next;
-};
 
 struct {
   struct spinlock lock;
@@ -79,4 +76,16 @@ kalloc(void)
   if(r)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
+}
+
+// returns the pointer to the kmem
+struct run*
+getkmem()
+{
+  struct run *r;
+  
+  acquire(&kmem.lock);
+  r = kmem.freelist;
+  release(&kmem.lock);
+  return r;
 }
