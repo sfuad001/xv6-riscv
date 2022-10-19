@@ -145,7 +145,6 @@ found:
   memset(&p->context, 0, sizeof(p->context));
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
-
   return p;
 }
 
@@ -250,6 +249,9 @@ userinit(void)
   p->cwd = namei("/");
 
   p->state = RUNNABLE;
+
+  //sysinfo: param == 1
+  p->syscallcnt = 0;
 
   release(&p->lock);
 }
@@ -701,7 +703,8 @@ sysinfo(int param)
     }
     return cnt;
   } else if (param == 1) {
-    return 1;
+    struct proc *p = myproc();
+    return p->syscallcnt;
   } else if (param == 2) {
     return 2;
   } 
