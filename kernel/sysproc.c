@@ -89,3 +89,16 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// return 
+// If param == 0: the total number of active processes // (ready, running, waiting, or zombie) in the system.
+// If param == 1: the total number of system calls that has made so far since the system boot up
+// If param == 2: the number of free memory pages in the system
+// Otherwise:return error (-1)
+uint64
+sys_sysinfo(void)
+{
+  int param;
+  argint(0, &param);
+  return sysinfo(param);
+}

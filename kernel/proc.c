@@ -681,3 +681,21 @@ procdump(void)
     printf("\n");
   }
 }
+
+// return 
+// If param == 0: the total number of active processes // (ready, running, waiting, or zombie) in the system.
+// If param == 1: the total number of system calls that has made so far since the system boot up
+// If param == 2: the number of free memory pages in the system
+// Otherwise:return error (-1)
+int 
+sysinfo(int param)
+{
+  if (param == 0) {
+    return 0;
+  } else if (param == 1) {
+    return 1;
+  } else if (param == 2) {
+    return 2;
+  } 
+  return -1;
+}
