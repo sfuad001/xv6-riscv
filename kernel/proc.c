@@ -698,6 +698,7 @@ sysinfo(int param)
   if (param == 0) {
     int cnt = 0;
     struct proc *p;
+
     for (p = proc; p < &proc[NPROC]; p++){
       acquire(&p->lock);
       if (p->state != UNUSED)
@@ -706,15 +707,20 @@ sysinfo(int param)
     }
     return cnt;
   } else if (param == 1) {
-    int syscallcnt;
-    struct proc *p = myproc();
-    acquire(&p->lock);
-    syscallcnt = p->syscallcnt; // return the total syscall except the current call
-    release(&p->lock);
+    int syscallcnt = 0;
+    struct proc *p;
+
+    // add all the process's syscall count from the boot up
+    for (p = proc; p < &proc[NPROC]; p++){
+      acquire(&p->lock);
+      syscallcnt += p->syscallcnt;
+      release(&p->lock);
+    }
     return syscallcnt;  
   } else if (param == 2) {
     int cnt = 0;
     struct run *r;
+
     r = getkmem();
     while (r) {
       r = r->next;
