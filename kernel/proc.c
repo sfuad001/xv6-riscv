@@ -57,6 +57,7 @@ procinit(void)
       initlock(&p->lock, "proc");
       p->state = UNUSED;
       p->kstack = KSTACK((int) (p - proc));
+      p->syscallcnt = 0; // sysinfo: param == 1
   }
 }
 
@@ -252,9 +253,6 @@ userinit(void)
   p->cwd = namei("/");
 
   p->state = RUNNABLE;
-
-  //sysinfo: param == 1
-  p->syscallcnt = 0;
 
   release(&p->lock);
 }
