@@ -144,6 +144,7 @@ syscall(void)
     // and store its return value in p->trapframe->a0
     p->trapframe->a0 = syscalls[num]();
     p->syscallcnt++;
+    p->syscallcnt_curr++;
   } else {
     printf("%d %s: unknown sys call %d\n",
             p->pid, p->name, num);

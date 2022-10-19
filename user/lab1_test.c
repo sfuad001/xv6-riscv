@@ -1,14 +1,15 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
+#include "kernel/pinfo.h"
 #include "user/user.h"
 #define MAX_PROC 10
 
-struct pinfo
-{
-    int ppid;
-    int syscall_count;
-    int page_usage;
-};
+// struct pinfo
+// {
+//     int ppid;
+//     int syscall_count;
+//     int page_usage;
+// };
 
 void print_sysinfo(void)
 {

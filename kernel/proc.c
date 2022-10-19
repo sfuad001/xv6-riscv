@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "run.h"
+#include "pinfo.h"
 #include "defs.h"
 
 struct cpu cpus[NCPU];
@@ -125,6 +126,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->syscallcnt_curr = 0; // procinfo
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -704,8 +706,12 @@ sysinfo(int param)
     }
     return cnt;
   } else if (param == 1) {
+    int syscallcnt;
     struct proc *p = myproc();
-    return p->syscallcnt - 1; // return the total syscall except the current call
+    acquire(&p->lock);
+    syscallcnt = p->syscallcnt; // return the total syscall except the current call
+    release(&p->lock);
+    return syscallcnt;  
   } else if (param == 2) {
     int cnt = 0;
     struct run *r;
@@ -721,8 +727,25 @@ sysinfo(int param)
 
 // provides information specific to the current process
 // (= caller process of this syscall). 
-// It takes as input a pointer of struct pinfo and fills out the fields of this struct
-int procinfo(struct pinfo *in) 
+// It takes an address of a pointer of struct pinfo (user pointer) and fills out the fields of this struct
+int procinfo(uint64 addr) 
 {
-  return 100;
+  // current process
+  struct proc *p = myproc();
+  struct pinfo pinfo;
+
+  // get the parent's pid of the current process
+  acquire(&wait_lock);
+  pinfo.ppid = p->parent->pid;
+  release(&wait_lock);
+  // number of sys_calls made by current process so far
+  pinfo.syscall_count = p->syscallcnt_curr;
+  // current process's memory size in pages
+  pinfo.page_usage = (int)(p->sz / PGSIZE);
+  if ((p->sz % PGSIZE) > 0)
+    pinfo.page_usage++;
+
+  if(copyout(p->pagetable, addr, (char *)&pinfo, sizeof(pinfo)) < 0)
+    return -1;
+  return 0;
 }

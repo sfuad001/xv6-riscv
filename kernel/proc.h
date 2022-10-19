@@ -105,5 +105,6 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
 
-  int syscallcnt;           // total syscall count so far after the system boot up
+  int syscallcnt;           // sysinfo: total syscall count so far after the system boot up
+  int syscallcnt_curr;      // procinfo: total syscall count so far for the current process
 };
