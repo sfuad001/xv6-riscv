@@ -8,3 +8,11 @@ typedef unsigned int  uint32;
 typedef unsigned long uint64;
 
 typedef uint64 pde_t;
+
+// procinfo
+// create a new type for struct pinfo
+typedef struct pinfo {
+    int ppid;
+    int syscall_count;
+    int page_usage;
+} pinfo;

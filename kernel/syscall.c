@@ -79,6 +79,15 @@ argstr(int n, char *buf, int max)
   return fetchstr(addr, buf, max);
 }
 
+// Retrieve an argument as a pointer.
+// Doesn't check for legality, since
+// copyin/copyout will do that.
+void
+argpinfo(int n, pinfo *ip)
+{
+  *ip = argraw(n);
+}
+
 // Prototypes for the functions that handle system calls.
 extern uint64 sys_fork(void);
 extern uint64 sys_exit(void);
@@ -101,7 +110,8 @@ extern uint64 sys_unlink(void);
 extern uint64 sys_link(void);
 extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
-extern uint64 sys_sysinfo(void); //sysinfo: declaration
+extern uint64 sys_sysinfo(void); // sysinfo: declaration
+extern uint64 sys_procinfo(void); // procinfo: declaration
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -128,6 +138,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_sysinfo] sys_sysinfo, // sysinfo: syscall entry
+[SYS_procinfo] sys_procinfo, // procinfo: syscall entry
 };
 
 void

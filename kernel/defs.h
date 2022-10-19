@@ -141,6 +141,7 @@ void            argaddr(int, uint64 *);
 int             fetchstr(uint64, char*, int);
 int             fetchaddr(uint64, uint64*);
 void            syscall();
+void            argpinfo(int, pinfo *); // procinfo:: support function to read pinfo structure
 
 // trap.c
 extern uint     ticks;
